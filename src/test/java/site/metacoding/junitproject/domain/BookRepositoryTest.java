@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -81,4 +82,15 @@ class BookRepositoryTest { // Repository - DB와 관련되 테스트를 진행�
     // 4. 책 수정
 
     // 5. 책 석제
+    @Test
+    public void 책삭졔_test() {
+        // given
+        Long id = 1L;
+
+        // when
+        bookRepository.deleteById(id);
+
+        // then
+        assertFalse(bookRepository.findById(id).isPresent()); // 값이 없으니까 false -> 성공
+    }
 }
