@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 import java.util.Optional;
@@ -66,6 +67,7 @@ class BookRepositoryTest { // Repository - DB와 관련되 테스트를 진행�
         Assertions.assertEquals(author, booksPS.get(0).getAuthor());
     }
     // 3. 책 한 건 보기
+    @Sql("classpath:db/tableInit.sql")
     @Test
     public void 책한건보기_test() {
         // given
@@ -82,6 +84,8 @@ class BookRepositoryTest { // Repository - DB와 관련되 테스트를 진행�
     // 4. 책 수정
 
     // 5. 책 석제
+
+    @Sql("classpath:db/tableInit.sql") // 이 테스트 실행전 resource 폴더안에 sql 문 실행한다.
     @Test
     public void 책삭졔_test() {
         // given
