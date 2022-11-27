@@ -82,6 +82,30 @@ class BookRepositoryTest { // Repository - DB와 관련되 테스트를 진행�
         assertEquals(author, bookPS.getAuthor());
     }
     // 4. 책 수정
+    @Sql("classpath:db/tableInit.sql")
+    @Test
+    public void 책수정_test() {
+        // given
+        Long id = 1L;
+        String title = "junit5";
+        String author = "메타코딩";
+        Book book = new Book(id, title, author);
+
+        // when
+        Book bookPS = bookRepository.save(book);
+
+        // then
+//        bookRepository.findAll().stream()
+//                .forEach(savedBook -> {
+//                    System.out.println(savedBook.getId());
+//                    System.out.println(savedBook.getTitle());
+//                });
+
+        assertEquals(id, bookPS.getId());
+        assertEquals(title, bookPS.getTitle());
+        assertEquals(author, bookPS.getAuthor());
+
+    }
 
     // 5. 책 석제
 
