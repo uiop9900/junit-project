@@ -1,5 +1,7 @@
 package site.metacoding.junitproject.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +24,11 @@ public class BookService {
 	}
 
 	// 2. 책 목록보기
+	public List<BookResponseDto> 책목록보기() {
+		return bookRepository.findAll().stream()
+				.map(new BookResponseDto()::toDto)
+				.collect(Collectors.toList());
+	}
 
 	// 3. 책 한 건 보기
 
