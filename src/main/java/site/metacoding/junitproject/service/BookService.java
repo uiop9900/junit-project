@@ -42,6 +42,10 @@ public class BookService {
 	}
 
 	// 4. 책 삭제
+	@Transactional(rollbackFor = RuntimeException.class)
+	public void 책삭제하기(Long id) { // Controller에서 null체크함, 없는 id가 들어와도 굳이 Exception 날릴 필요 없다.
+		bookRepository.deleteById(id);
+	}
 
 	// 5. 책 수정
 }
