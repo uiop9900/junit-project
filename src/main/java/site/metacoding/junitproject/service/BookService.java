@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.aspectj.bridge.Message;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import site.metacoding.junitproject.domain.Book;
@@ -48,4 +49,15 @@ public class BookService {
 	}
 
 	// 5. 책 수정
+	@Transactional(rollbackFor = RuntimeException.class)
+	public void 책수정하기(Long id, BookSaveReqDto dto) {
+		final Optional<Book> bookOP = bookRepository.findById(id);
+		if (bookOP.isPresent()) { // 찾으면 수정
+			final Book book = bookOP.get();
+			book.update(dto.getTitle(), dto.getAuthor());
+		} else { // 수정할 book이 존재하지 않는다.
+				throw new RuntimeException();
+		}
+		// 메소드 종료시에 더티체킹으로 update된다.
+	}
 }
