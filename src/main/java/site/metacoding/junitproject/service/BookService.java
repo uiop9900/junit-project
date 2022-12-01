@@ -1,6 +1,7 @@
 package site.metacoding.junitproject.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,14 @@ public class BookService {
 	}
 
 	// 3. 책 한 건 보기
+	public BookResponseDto 책한건보기(Long id) {
+		final Optional<Book> bookOP = bookRepository.findById(id);
+		if (bookOP.isPresent()) {
+			return new BookResponseDto().toDto(bookOP.get());
+		} else {
+			throw new RuntimeException();
+		}
+	}
 
 	// 4. 책 삭제
 
