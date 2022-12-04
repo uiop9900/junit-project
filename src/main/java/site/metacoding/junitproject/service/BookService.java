@@ -69,11 +69,12 @@ public class BookService {
 
 	// 5. 책 수정
 	@Transactional(rollbackFor = RuntimeException.class)
-	public void 책수정하기(Long id, BookSaveReqDto dto) {
+	public BookResponseDto 책수정하기(Long id, BookSaveReqDto dto) { // 기존의 void 코드는 반환값이 없어서 잘 update 되었는지 값을 비교할수없다.
 		final Optional<Book> bookOP = bookRepository.findById(id);
 		if (bookOP.isPresent()) { // 찾으면 수정
 			final Book book = bookOP.get();
 			book.update(dto.getTitle(), dto.getAuthor());
+			return book.toDto();
 		} else { // 수정할 book이 존재하지 않는다.
 				throw new RuntimeException();
 		}
