@@ -17,6 +17,7 @@ import site.metacoding.junitproject.web.dto.BookSaveReqDto;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -83,5 +84,23 @@ class BookServiceTest {
         Assertions.assertThat(dtos.get(0).getAuthor()).isEqualTo(books.get(0).getAuthor());
         Assertions.assertThat(dtos.get(1).getTitle()).isEqualTo(books.get(1).getTitle());
         Assertions.assertThat(dtos.get(1).getAuthor()).isEqualTo(books.get(1).getAuthor());
+    }
+
+    @Test
+    public void 책한건보기_테스트() {
+        // given
+        Long id = 1L;
+        Book book = new Book(1L, "junit", "메타코딩");
+        Optional<Book> bookOP = Optional.of(book);
+
+        // stub
+        when(bookRepository.findById(1L)).thenReturn(bookOP);
+
+        // when
+        BookResponseDto dto = bookService.책한건보기(id);
+
+        // then
+        Assertions.assertThat(dto.getId()).isEqualTo(bookOP.get().getId());
+        Assertions.assertThat(dto.getAuthor()).isEqualTo(bookOP.get().getAuthor());
     }
 }
