@@ -34,9 +34,21 @@ public class BookService {
 
 	// 2. 책 목록보기
 	public List<BookResponseDto> 책목록보기() {
-		return bookRepository.findAll().stream()
-				.map(new BookResponseDto()::toDto)
+		List<BookResponseDto> dtos = bookRepository.findAll().stream()
+				//.map(new BookResponseDto()::toDto)
+				.map(bookPS -> new BookResponseDto().toDto(bookPS))
 				.collect(Collectors.toList());
+
+		//print
+		dtos.stream().forEach(
+				dto -> {
+					System.out.println("============본코드");
+					System.out.println(dto.getId());
+					System.out.println(dto.getTitle());
+				}
+		);
+
+		return dtos;
 	}
 
 	// 3. 책 한 건 보기

@@ -8,11 +8,15 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import site.metacoding.junitproject.domain.Book;
 import site.metacoding.junitproject.domain.BookRepository;
 import site.metacoding.junitproject.util.MailSender;
 import site.metacoding.junitproject.util.MailSenderStub;
 import site.metacoding.junitproject.web.dto.BookResponseDto;
 import site.metacoding.junitproject.web.dto.BookSaveReqDto;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -50,6 +54,34 @@ class BookServiceTest {
         //assertEquals(dto.getAuthor(), bookResponseDto.getAuthor());
         Assertions.assertThat(dto.getTitle()).isEqualTo(bookResponseDto.getTitle());
         Assertions.assertThat(dto.getAuthor()).isEqualTo(bookResponseDto.getAuthor());
+    }
 
+    @Test
+    public void 책목록보기_테스트() {
+        // given (파라미터로 들어올 데이터)
+
+        // stub (가설)
+        List<Book> books = new ArrayList<>();
+        books.add(new Book(1L, "junit", "메타코딩"));
+        books.add(new Book(2L, "Spring", "겟인데어"));
+        when(bookRepository.findAll()).thenReturn(books);
+
+        // when (실행)
+        List<BookResponseDto> dtos = bookService.책목록보기();
+
+        //print
+        dtos.stream().forEach(
+                dto -> {
+                    System.out.println("============test");
+                    System.out.println(dto.getId());
+                    System.out.println(dto.getTitle());
+                }
+        );
+
+        // then (검증)
+        Assertions.assertThat(dtos.get(0).getTitle()).isEqualTo(books.get(0).getTitle());
+        Assertions.assertThat(dtos.get(0).getAuthor()).isEqualTo(books.get(0).getAuthor());
+        Assertions.assertThat(dtos.get(1).getTitle()).isEqualTo(books.get(1).getTitle());
+        Assertions.assertThat(dtos.get(1).getAuthor()).isEqualTo(books.get(1).getAuthor());
     }
 }
