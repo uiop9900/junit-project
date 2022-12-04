@@ -29,14 +29,14 @@ public class BookService {
 				throw new RuntimeException("메일이 전송되지 않습니다.");
 			}
 		}
-		return new BookResponseDto().toDto(bookPS);
+		return bookPS.toDto();
 	}
 
 	// 2. 책 목록보기
 	public List<BookResponseDto> 책목록보기() {
 		List<BookResponseDto> dtos = bookRepository.findAll().stream()
-				//.map(new BookResponseDto()::toDto)
-				.map(bookPS -> new BookResponseDto().toDto(bookPS))
+				//.map(new BookResponseDto()::toDto) -> 매번 new를 하는게 아니라 toDto가 매번되는 것이기때문에 여러개 객체가 new 되는게 아니라 한 개만 들어간다.
+				.map(book -> book.toDto())
 				.collect(Collectors.toList());
 
 		//print
@@ -55,7 +55,7 @@ public class BookService {
 	public BookResponseDto 책한건보기(Long id) {
 		final Optional<Book> bookOP = bookRepository.findById(id);
 		if (bookOP.isPresent()) {
-			return new BookResponseDto().toDto(bookOP.get());
+			return bookOP.get().toDto();
 		} else {
 			throw new RuntimeException();
 		}
