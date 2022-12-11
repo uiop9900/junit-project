@@ -27,7 +27,7 @@ public class BookApiController {
     // 1. 책 등록
     @PostMapping("/api/v1/book")
     public ResponseEntity<?> saveBook(@Valid @RequestBody BookSaveReqDto bookSaveReqDto, BindingResult bindingResult) {
-        BookResponseDto bookResponseDto = bookService.책등록하기(bookSaveReqDto);
+
 
         if (bindingResult.hasErrors()) {
             Map<String, String> errorMap = new HashMap<>();
@@ -37,9 +37,10 @@ public class BookApiController {
             System.out.println("==========================");
             System.out.println(errorMap.toString());
             System.out.println("==========================");
-            return new ResponseEntity<>(CMRespDto.builder().code(1).msg(errorMap.toString()).body(bookResponseDto).build(), HttpStatus.BAD_REQUEST); // 400 -> bad request
+            throw new RuntimeException(errorMap.toString());
         }
 
+        BookResponseDto bookResponseDto = bookService.책등록하기(bookSaveReqDto);
         return new ResponseEntity<>(CMRespDto.builder().code(1).msg("글 저장 성공").body(bookResponseDto).build(), HttpStatus.CREATED); // 201 -> insert
     }
 
