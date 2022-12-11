@@ -1,14 +1,22 @@
 package site.metacoding.junitproject.web;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.web.HateoasPageableHandlerMethodArgumentResolver;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import site.metacoding.junitproject.service.BookService;
 import site.metacoding.junitproject.web.dto.response.BookResponseDto;
 import site.metacoding.junitproject.web.dto.request.BookSaveReqDto;
 import site.metacoding.junitproject.web.dto.response.CMRespDto;
+
+import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -18,10 +26,21 @@ public class BookApiController {
 
     // 1. 책 등록
     @PostMapping("/api/v1/book")
-    public ResponseEntity<?> saveBook(BookSaveReqDto bookSaveReqDto) {
+    public ResponseEntity<?> saveBook(@Valid @RequestBody BookSaveReqDto bookSaveReqDto, BindingResult bindingResult) {
         BookResponseDto bookResponseDto = bookService.책등록하기(bookSaveReqDto);
-        CMRespDto<?> cmRespDto = CMRespDto.builder().code(1).msg("글 저장 성공").body(bookResponseDto).build();
-        return new ResponseEntity<>(cmRespDto, HttpStatus.CREATED); // 201 -> insert 가 성공적으로 되었을때 뜬다.
+
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errorMap = new HashMap<>();
+            for(FieldError fe : bindingResult.getFieldErrors()) {
+                errorMap.put(fe.getField(), fe.getDefaultMessage());
+            }
+            System.out.println("==========================");
+            System.out.println(errorMap.toString());
+            System.out.println("==========================");
+            return new ResponseEntity<>(CMRespDto.builder().code(1).msg(errorMap.toString()).body(bookResponseDto).build(), HttpStatus.BAD_REQUEST); // 400 -> bad request
+        }
+
+        return new ResponseEntity<>(CMRespDto.builder().code(1).msg("글 저장 성공").body(bookResponseDto).build(), HttpStatus.CREATED); // 201 -> insert
     }
 
     // 2. 책 목록보기
