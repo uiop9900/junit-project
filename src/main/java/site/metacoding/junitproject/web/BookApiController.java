@@ -30,7 +30,6 @@ public class BookApiController {
     @PostMapping("/api/v1/book")
     public ResponseEntity<?> saveBook(@Valid @RequestBody BookSaveReqDto bookSaveReqDto, BindingResult bindingResult) {
 
-
         if (bindingResult.hasErrors()) {
             Map<String, String> errorMap = new HashMap<>();
             for(FieldError fe : bindingResult.getFieldErrors()) {
@@ -77,8 +76,19 @@ public class BookApiController {
     }
 
     // 5. 책 수정하기
-    public ResponseEntity<?> updateBook() {
-        return null;
+    @PutMapping("/api/v1/book/{id}")
+    public ResponseEntity<?> updateBook(@PathVariable Long id, @RequestBody @Valid BookSaveReqDto bookSaveReqDto, BindingResult bindingResult) { // json으로 받기 위해 requestBody 사용한다.
+
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errorMap = new HashMap<>();
+            for(FieldError fe : bindingResult.getFieldErrors()) {
+                errorMap.put(fe.getField(), fe.getDefaultMessage());
+            }
+
+            throw new RuntimeException(errorMap.toString());
+        }
+        BookResponseDto bookResponseDto = bookService.책수정하기(id, bookSaveReqDto);
+        return new ResponseEntity<>(CMRespDto.builder().code(1).msg("글 수정하기 성공").body(null).build(), HttpStatus.OK); // 응답에 body가 있어서 OK함.
     }
 
 }
