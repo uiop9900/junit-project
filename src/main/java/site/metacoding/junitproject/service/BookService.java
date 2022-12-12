@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import site.metacoding.junitproject.domain.Book;
 import site.metacoding.junitproject.domain.BookRepository;
 import site.metacoding.junitproject.util.MailSender;
+import site.metacoding.junitproject.web.dto.response.BookListResponseDto;
 import site.metacoding.junitproject.web.dto.response.BookResponseDto;
 import site.metacoding.junitproject.web.dto.request.BookSaveReqDto;
 
@@ -32,7 +33,7 @@ public class BookService {
 	}
 
 	// 2. 책 목록보기
-	public List<BookResponseDto> 책목록보기() {
+	public BookListResponseDto 책목록보기() {
 		List<BookResponseDto> dtos = bookRepository.findAll().stream()
 				//.map(new BookResponseDto()::toDto) -> 매번 new를 하는게 아니라 toDto가 매번되는 것이기때문에 여러개 객체가 new 되는게 아니라 한 개만 들어간다.
 				.map(book -> book.toDto())
@@ -47,7 +48,8 @@ public class BookService {
 				}
 		);
 
-		return dtos;
+		BookListResponseDto bookListResponseDto = BookListResponseDto.builder().bookList(dtos).build();
+		return bookListResponseDto;
 	}
 
 	// 3. 책 한 건 보기
